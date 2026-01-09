@@ -94,7 +94,7 @@
       "type": "custom-liquid",
       "name": "t:names.custom_liquid",
       "settings": {
-        "custom_liquid": "teste3\n{% if customer %}\nteste\n<script>\nwindow.customerDebug = {\n  orders_count: {{ customer.orders_count | json }},\n  orders: {{ customer.orders | json }},\n  last_order: {{ customer.last_order | json }},\n  total_spent: {{ customer.total_spent | json }},\n  tags: {{ customer.tags | json }}\n}\n\nconsole.log('CUSTOMER DEBUG:', window.customerDebug)\n</script>\n{% endif %}",
+        "custom_liquid": "{% if customer and customer.orders_count > 0 %}\nTEM PEDIDOS\n{% else %}\nSEM PEDIDOS OU NAO LOGADO\n{% endif %}",
         "color_scheme": "",
         "section_width": "page-width",
         "padding-block-start": 0,
