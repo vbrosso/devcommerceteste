@@ -94,7 +94,7 @@
       "type": "custom-liquid",
       "name": "t:names.custom_liquid",
       "settings": {
-        "custom_liquid": "{% if customer and customer.orders_count > 0 %}\nTEM PEDIDOS\n{% else %}\nSEM PEDIDOS OU NAO LOGADO\n{% endif %}",
+        "custom_liquid": "{% if customer %}\nLOGADO\n{% else %}\nNAO LOGADO\n{% endif %}\n--------------\n{% if customer and customer.orders_count > 0 %}\nTEM PEDIDOS\n{% else %}\nSEM PEDIDOS OU NAO LOGADO\n{% endif %}",
         "color_scheme": "",
         "section_width": "page-width",
         "padding-block-start": 0,
