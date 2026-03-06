@@ -1,0 +1,454 @@
+{% style %}
+.Section-{{ section.id }}-padding {
+  padding-top: {{ section.settings.padding_top_movil }}px;
+  padding-bottom: {{ section.settings.padding_bottom_movil }}px;
+}
+.ImageCollage__Wrapper {
+  padding-left: 15px;
+  padding-right: 15px;
+  max-width: 1380px;
+  margin: 0 auto;
+}
+.ImageCollage__Image-1 {
+  width: 100%;
+  height: 255px;
+  object-fit: cover;
+  object-position: center top;
+  border-radius: 12px;
+  overflow: hidden;
+}
+.ImageCollage__Image-2 {
+  width: 100%;
+  height: 255px;
+  object-fit: cover;
+  object-position: center center;
+  border-radius: 12px;
+  overflow: hidden;
+}
+.ImageCollage__Image-3 {
+  width: 100%;
+  {% if section.blocks.size == 3 and section.settings.three_images_style == 'classic' %}
+    height: 155px;
+  {% elsif section.blocks.size == 3 and section.settings.three_images_style == 'modern' %}
+    height: 255px;
+  {% endif %}
+  object-fit: cover;
+  object-position: center {% if section.settings.three_images_focus == 'top' %}top{% elsif section.settings.three_images_focus == 'center' %}center{% else %}bottom{% endif %};
+  border-radius: 12px;
+  overflow: hidden;
+}
+.ImageCollage__Image-4 {
+  width: 100%;
+  height: 255px;
+  object-fit: cover;
+  object-position: center center;
+  border-radius: 12px;
+  overflow: hidden;
+}
+.ImageCollage__Image-3_4 {
+  width: 100%;
+  height: 184px;
+  object-fit: cover;
+  object-position: center top;
+  border-radius: 12px;
+  overflow: hidden;
+}
+.ImageCollage__Link {
+  display: block;
+  text-decoration: none;
+  color: inherit;
+}
+.ImageCollage__Link:hover {
+  opacity: 0.95;
+}
+/* Grid de respaldo si el tema no tiene .grid / .col-* */
+#section-{{ section.id }} .ImageCollage__Wrapper .grid {
+  display: grid;
+  grid-template-columns: repeat(12, 1fr);
+  gap: 1rem;
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+#section-{{ section.id }} .ImageCollage__Wrapper .grid li {
+  margin: 0;
+}
+#section-{{ section.id }} .ImageCollage__Wrapper .grid .col-12 { grid-column: span 12; }
+#section-{{ section.id }} .ImageCollage__Wrapper .grid .col-6 { grid-column: span 6; }
+#section-{{ section.id }} .ImageCollage__Wrapper .grid .col-4 { grid-column: span 4; }
+#section-{{ section.id }} .ImageCollage__Wrapper .grid .col-8 { grid-column: span 8; }
+#section-{{ section.id }} .ImageCollage__Wrapper .grid .col-3\@lg { grid-column: span 3; }
+#section-{{ section.id }} .ImageCollage__Wrapper .grid .col-4\@lg { grid-column: span 4; }
+@media (max-width: 1023px) {
+  #section-{{ section.id }} .ImageCollage__Wrapper .grid .col-4\@lg { grid-column: span 12; }
+  #section-{{ section.id }} .ImageCollage__Wrapper .grid .col-3\@lg { grid-column: span 6; }
+}
+@media (max-width: 640px) {
+  #section-{{ section.id }} .ImageCollage__Wrapper .grid .col-6,
+  #section-{{ section.id }} .ImageCollage__Wrapper .grid .col-4,
+  #section-{{ section.id }} .ImageCollage__Wrapper .grid .col-8 { grid-column: span 12; }
+}
+@media (min-width:641px) {
+  .Section-{{ section.id }}-padding {
+    padding-top: {{ section.settings.padding_top_desktop }}px;
+    padding-bottom: {{ section.settings.padding_bottom_desktop }}px;
+  }
+  .ImageCollage__Wrapper {
+    padding-left: 30px;
+    padding-right: 30px;
+  }
+  .ImageCollage__Image-1 {
+    height: 500px;
+  }
+  .ImageCollage__Image-2 {
+    height: 500px;
+  }
+  .ImageCollage__Image-3 {
+    {% if section.blocks.size == 3 and section.settings.three_images_style == 'classic' %}
+      height: 318px;
+    {% elsif section.blocks.size == 3 and section.settings.three_images_style == 'modern' %}
+      height: 500px;
+    {% endif %}
+  }
+  .ImageCollage__Image-4 {
+    height: 500px;
+  }
+  .ImageCollage__Image-3_4 {
+    height: 326px;
+  }
+}
+@media (min-width:1024px) {
+  .ImageCollage__Image-3 {
+    {% if section.blocks.size == 3 and section.settings.three_images_style == 'classic' %}
+      height: 390px;
+    {% elsif section.blocks.size == 3 and section.settings.three_images_style == 'modern' %}
+      height: 500px;
+    {% endif %}
+  }
+}
+@media (min-width:1280px) {
+  .ImageCollage__Image-1 {
+    height: 795px;
+    {% if section.settings.enable_custom_width %}
+      width: {{ section.settings.custom_width }}px!important;
+      height: auto!important;
+      margin: 0 auto;
+    {% endif %}
+  }
+  .ImageCollage__Image-2 {
+    height: 795px;
+  }
+  .ImageCollage__Image-3 {
+    height: 515px;
+  }
+  .ImageCollage__Image-4 {
+    height: 395px;
+  }
+  .ImageCollage__Image-3_4 {
+    height: 530px;
+  }
+}
+@media (min-width: 1440px) {
+  .ImageCollage__Wrapper {
+    padding-left: 0;
+    padding-right: 0;
+  }
+  .ImageCollage__Image-1 {
+    height: 905px;
+  }
+  .ImageCollage__Image-2 {
+    height: 905px;
+  }
+  .ImageCollage__Image-3 {
+    height: 600px;
+  }
+  .ImageCollage__Image-4 {
+    height: 445px;
+  }
+  .ImageCollage__Image-3_4 {
+    height: 600px;
+  }
+}
+{% endstyle %}
+
+
+{% liquid
+  assign size = section.blocks.size
+  assign three_style = section.settings.three_images_style
+  assign enable_3_4 = section.settings.enable_3_4
+  assign img_style = section.settings.image_3_4_styles
+
+  assign col_class = ''
+  assign img_class = ''
+-%}
+
+<section class="Section-{{ section.id }}-padding" id="section-{{ section.id }}" style="background-color:{{ section.settings.bg_color }};">
+  <div class="ImageCollage__Wrapper">
+    <ul class="grid gap-sm">
+      {% for block in section.blocks %}
+        {% liquid
+          case size
+            when 1
+              assign col_class = 'col-12'
+              assign img_class = 'ImageCollage__Image-1'
+            when 2
+              if enable_3_4 == false
+                assign col_class = 'col-6'
+                assign img_class = 'ImageCollage__Image-2'
+              else
+                if forloop.first
+                  assign col_class = 'col-4'
+                  assign img_class = 'ImageCollage__Image-3_4'
+                else
+                  assign col_class = 'col-8'
+                  assign img_class = 'ImageCollage__Image-3_4'
+                endif
+                if img_style == 'right'
+                  if forloop.first
+                    assign col_class = 'col-8'
+                    assign img_class = 'ImageCollage__Image-3_4'
+                  else
+                    assign col_class = 'col-4'
+                    assign img_class = 'ImageCollage__Image-3_4'
+                  endif
+                endif
+              endif
+            when 3
+              if three_style == 'classic'
+                assign col_class = 'col-4'
+              else
+                assign col_class = 'col-6 col-4@lg'
+              endif
+              assign img_class = 'ImageCollage__Image-3'
+              if three_style == 'modern' and forloop.last
+                assign col_class = 'col-12 col-4@lg'
+              endif
+            when 4
+              assign col_class = 'col-6 col-3@lg'
+              assign img_class = 'ImageCollage__Image-4'
+          endcase
+
+          assign extra_class = ''
+          if size == 3 and three_style == 'modern' and forloop.last
+            assign extra_class = 'col-12 col-4@lg'
+          endif
+        -%}
+        <li class="{{ col_class }} {{ extra_class }}" {{ block.shopify_attributes }}>
+          {% if block.settings.link != blank %}
+            <a href="{{ block.settings.link }}" class="ImageCollage__Link"{% if block.settings.open_new_tab %} target="_blank" rel="noopener noreferrer"{% endif %}>
+          {% endif %}
+          <figure>
+            <img src="{{ block.settings.image | img_url: 'master' }}" class="{{ img_class }}" height="255" width="auto" alt="{{ block.settings.image.alt }}" loading="lazy" decoding="async" fetchpriority="low" />
+          </figure>
+          {% if block.settings.link != blank %}
+            </a>
+          {% endif %}
+        </li>
+      {% endfor %}
+    </ul>
+  </div>
+</section>
+
+
+{% comment %}
+<section class="Section-{{ section.id }}-padding" id="section-{{ section.id }}" style="background-color:{{ section.settings.bg_color }};">
+
+  <div class="ImageCollage__Wrapper">
+    <ul class="grid gap-sm">
+      {% for block in section.blocks %}
+        <li 
+          class="{% if section.blocks.size == 1 %}col-12{% elsif section.blocks.size == 2 and section.settings.enable_3_4 == false %}col-6{% elsif section.blocks.size == 3 and section.settings.three_images_style == 'classic' %}col-4{% elsif section.blocks.size == 3 and section.settings.three_images_style == 'modern' %}col-6 col-4@lg{%  elsif section.blocks.size > 3 %}col-6 col-3@lg{% endif %} {% if section.blocks.size == 3 and section.settings.three_images_style == 'modern' and forloop.last %}col-12 col-4@lg{% endif %} {%if section.blocks.size == 2 and section.settings.enable_3_4 and section.settings.image_3_4_styles == 'left' and forloop.first %}col-4{% elsif section.blocks.size == 2 and section.settings.enable_3_4 and section.settings.image_3_4_styles == 'left' and forloop.last %}col-8{% elsif section.blocks.size == 2 and section.settings.enable_3_4 and section.settings.image_3_4_styles == 'right' and forloop.first %}col-8{% elsif section.blocks.size == 2 and section.settings.enable_3_4 and section.settings.image_3_4_styles == 'right' and forloop.last %}col-4{% endif %}" 
+          {{ block.shopify_attributes }}>
+          <figure>
+            <img 
+              src="{{ block.settings.image | img_url: 'master' }}" 
+              class="{% if section.blocks.size == 1 %}ImageCollage__Image-1{% elsif section.blocks.size == 2 and section.settings.enable_3_4 == false %}ImageCollage__Image-2{% elsif section.blocks.size == 2 and section.settings.enable_3_4 %}ImageCollage__Image-3_4{% elsif section.blocks.size == 3 %}ImageCollage__Image-3{% elsif section.blocks.size == 4 %}ImageCollage__Image-4{% endif %}"
+              height="255" width="auto" 
+              alt="{{ block.settings.image.alt }}" loading="lazy" decoding="async" fetchpriority="low" />
+          </figure>
+        </li>
+      {% endfor %}
+    </ul>
+  </div>
+
+</section>
+{% endcomment %}
+
+{% schema %}
+{
+  "name": "RU | Image collage",
+  "settings": [
+    {
+      "type": "color",
+      "id": "bg_color",
+      "label": "Background color",
+      "default": "#ffffff"
+    },
+    {
+      "type": "header",
+      "content": "One image"
+    },
+    {
+      "type": "checkbox",
+      "id": "enable_custom_width",
+      "label": "Enable custom width"
+    },
+    {
+      "type": "range",
+      "id": "custom_width",
+      "min": 100,
+      "max": 1440,
+      "step": 20,
+      "unit": "px",
+      "label": "Width (desktop)",
+      "default": 1080
+    },
+    {
+      "type": "header",
+      "content": "Two images"
+    },
+    {
+      "type": "checkbox",
+      "id": "enable_3_4",
+      "label": "Enable image 3/4",
+      "info": "Only works with two image blocks"
+    },
+    {
+		  "type": "select",
+		  "id": "image_3_4_styles",
+		  "label": "Styles 3/4",
+		  "options": [
+		    {
+		      "value": "left",
+		      "label": "Left image"
+		    },
+		    {
+		      "value": "right",
+		      "label": "Right image"
+		    }
+		  ],
+		  "default": "left"
+		},
+    {
+      "type": "header",
+      "content": "Three images"
+    },
+    {
+		  "type": "select",
+		  "id": "three_images_style",
+		  "label": "Three images style",
+		  "options": [
+		    {
+		      "value": "classic",
+		      "label": "Classic"
+		    },
+		    {
+		      "value": "modern",
+		      "label": "Modern"
+		    }
+		  ],
+		  "default": "modern"
+		},
+    {
+		  "type": "select",
+		  "id": "three_images_focus",
+		  "label": "Image focus",
+		  "options": [
+		    {
+		      "value": "top",
+		      "label": "Top"
+		    },
+		    {
+		      "value": "center",
+		      "label": "Center"
+		    },
+		    {
+		      "value": "bottom",
+		      "label": "Bottom"
+		    }
+		  ],
+		  "default": "top"
+		},
+    {
+      "type": "header",
+      "content": "Spacing"
+    },
+    {
+      "type": "range",
+      "id": "padding_top_movil",
+      "min": 0,
+      "max": 200,
+      "step": 4,
+      "unit": "px",
+      "label": "Padding Top (mobile)",
+      "default": 32
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom_movil",
+      "min": 0,
+      "max": 200,
+      "step": 4,
+      "unit": "px",
+      "label": "Padding Bottom (mobile)",
+      "default": 32
+    },
+    {
+      "type": "range",
+      "id": "padding_top_desktop",
+      "min": 0,
+      "max": 320,
+      "step": 4,
+      "unit": "px",
+      "label": "Padding Top (desktop)",
+      "default": 64
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom_desktop",
+      "min": 0,
+      "max": 320,
+      "step": 4,
+      "unit": "px",
+      "label": "Padding Bottom (desktop)",
+      "default": 64
+    }
+  ],
+  "blocks": [
+    {
+      "type": "image",
+      "name": "Image",
+      "settings": [
+        {
+          "type": "image_picker",
+          "id": "image",
+          "label": "Image"
+        },
+        {
+          "type": "url",
+          "id": "link",
+          "label": "Link (opcional)"
+        },
+        {
+          "type": "checkbox",
+          "id": "open_new_tab",
+          "label": "Abrir en nueva pestaña",
+          "default": false
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "category": "Advanced",
+      "name": "RU | Image collage",
+      "settings": {},
+			"blocks": [
+        {
+          "type": "image"
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}
