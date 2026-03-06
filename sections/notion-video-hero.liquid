@@ -1,3 +1,4 @@
+
 {% style %}
   /* Section padding */
   .ru-video-hero-{{ section.id }} .ru-video-hero__padding {
@@ -86,13 +87,17 @@
     width: 100%;
     padding-bottom: 56.25%;
   }
-  .ru-video-hero-{{ section.id }} .ru-video-hero-media iframe {
+  .ru-video-hero-{{ section.id }} .ru-video-hero-media iframe,
+  .ru-video-hero-{{ section.id }} .ru-video-hero-media video {
     position: absolute;
     top: 0;
     left: 0;
     width: 100%;
     height: 100%;
     border: 0;
+  }
+  .ru-video-hero-{{ section.id }} .ru-video-hero-media video {
+    object-fit: contain;
   }
 
   /* Video card */
@@ -102,6 +107,7 @@
     text-decoration: none;
     position: relative;
     cursor: pointer;
+    overflow: hidden;
   }
   .ru-video-hero-{{ section.id }} .ru-video-hero-card:hover .ru-video-hero-preview {
     filter: contrast(110%);
@@ -114,46 +120,71 @@
     object-fit: cover;
     vertical-align: middle;
   }
+  /* Botón play: centrado, círculo con sombra e ícono visible */
   .ru-video-hero-{{ section.id }} .ru-video-hero-play {
     position: absolute;
-    width: 100%;
-    height: 100%;
-    top: 0;
-    left: 0;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 72px;
+    height: 72px;
     display: flex;
     align-items: center;
     justify-content: center;
-    color: #fff;
     pointer-events: none;
   }
   .ru-video-hero-{{ section.id }} .ru-video-hero-play::before {
     content: "";
     position: absolute;
-    width: 60px;
-    height: 60px;
-    top: calc(50% - 30px);
-    left: calc(50% - 30px);
-    background: rgba(255, 255, 255, 0.9);
+    inset: 0;
+    width: 72px;
+    height: 72px;
+    margin: auto;
+    background: rgba(255, 255, 255, 0.95);
     border-radius: 50%;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.25), 0 0 0 1px rgba(0, 0, 0, 0.08);
   }
   .ru-video-hero-{{ section.id }} .ru-video-hero-play svg {
     position: relative;
     z-index: 1;
-    width: 24px;
-    height: 24px;
+    width: 28px;
+    height: 28px;
+    margin-left: 4px; /* compensa ópticamente el triángulo para verse centrado */
+    fill: rgba(0, 0, 0, 0.85);
   }
 {% endstyle %}
 
+{% liquid
+  assign video_source = section.settings.video_source | default: 'youtube'
+  assign use_youtube = false
+  assign use_shopify_video = false
+  assign video_url_shopify = ''
+  assign thumb_img = section.settings.video_image
+
+  if video_source == 'shopify' and section.settings.video_upload != blank
+    assign use_shopify_video = true
+    assign video_url_shopify = section.settings.video_upload.sources[0].url
+    if section.settings.video_upload.preview_image != blank
+      assign thumb_img = section.settings.video_upload.preview_image
+    endif
+  elsif video_source == 'youtube' and section.settings.video_youtube_id != blank
+    assign use_youtube = true
+  endif
+%}
+
 <div class="ru-video-hero-{{ section.id }}" id="section-{{ section.id }}">
   <div class="ru-video-hero__padding">
+    {% if use_youtube or use_shopify_video %}
     <a href="#0"
        class="ru-video-hero-card ru-video-hero-js-trigger"
        aria-controls="ru-video-hero-modal-{{ section.id }}"
-       data-url="https://www.youtube.com/embed/{{ section.settings.video_youtube_id }}?autoplay=1"
+       data-video-type="{{ video_source }}"
+       {% if use_youtube %}data-url="https://www.youtube.com/embed/{{ section.settings.video_youtube_id }}?autoplay=1"{% endif %}
+       {% if use_shopify_video %}data-video-src="{{ video_url_shopify }}"{% endif %}
        role="button">
       <img class="ru-video-hero-preview"
-           src="{{ section.settings.video_image | img_url: '1200x' }}"
-           alt="{{ section.settings.video_image.alt | default: 'Video' }}"
+           src="{{ thumb_img | img_url: '1200x' }}"
+           alt="{{ thumb_img.alt | default: 'Video' }}"
            width="1200"
            height="675"
            loading="lazy">
@@ -163,6 +194,7 @@
         </svg>
       </span>
     </a>
+    {% endif %}
   </div>
 
   <div class="ru-video-hero-modal ru-video-hero-modal--is-loading ru-video-hero-js-modal"
@@ -173,13 +205,17 @@
        data-first-focus=".ru-video-hero-modal__close">
     <div class="ru-video-hero-modal__content">
       <div class="ru-video-hero-media">
-        <iframe class="ru-video-hero-js-iframe"
-                src=""
-                width="640"
-                height="360"
-                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                allowfullscreen
-                title="Video"></iframe>
+        {% if use_shopify_video %}
+          <video class="ru-video-hero-js-video" controls playsinline></video>
+        {% else %}
+          <iframe class="ru-video-hero-js-iframe"
+                  src=""
+                  width="640"
+                  height="360"
+                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                  allowfullscreen
+                  title="Video"></iframe>
+        {% endif %}
       </div>
     </div>
     <div class="ru-video-hero-modal__loader" aria-hidden="true">
@@ -218,13 +254,24 @@
       var id = modalEl.id;
       var trigger = document.querySelector('[aria-controls="' + id + '"]');
       var iframe = modalEl.querySelector('.ru-video-hero-js-iframe');
+      var videoEl = modalEl.querySelector('.ru-video-hero-js-video');
       var closeBtn = modalEl.querySelector('.ru-video-hero-js-close');
-      if (!iframe) return;
+      var isVideo = !!videoEl;
+      if (!iframe && !videoEl) return;
 
       function show() {
         Util.addClass(modalEl, 'modal--is-visible');
-        var url = trigger ? trigger.getAttribute('data-url') : '';
-        if (url) iframe.setAttribute('src', url);
+        if (isVideo && videoEl && trigger) {
+          var src = trigger.getAttribute('data-video-src');
+          if (src) {
+            videoEl.src = src;
+            videoEl.play();
+          }
+          Util.removeClass(modalEl, 'ru-video-hero-modal--is-loading');
+        } else if (iframe) {
+          var url = trigger ? trigger.getAttribute('data-url') : '';
+          if (url) iframe.setAttribute('src', url);
+        }
         document.body.style.overflow = 'hidden';
         if (closeBtn) closeBtn.focus();
       }
@@ -232,7 +279,11 @@
       function hide() {
         Util.addClass(modalEl, 'ru-video-hero-modal--is-loading');
         Util.removeClass(modalEl, 'modal--is-visible');
-        iframe.setAttribute('src', '');
+        if (isVideo && videoEl) {
+          videoEl.pause();
+          videoEl.removeAttribute('src');
+        }
+        if (iframe) iframe.setAttribute('src', '');
         document.body.style.overflow = '';
         if (trigger) trigger.focus();
       }
@@ -266,9 +317,11 @@
         }
       });
 
-      iframe.addEventListener('load', function() {
-        Util.removeClass(modalEl, 'ru-video-hero-modal--is-loading');
-      });
+      if (iframe) {
+        iframe.addEventListener('load', function() {
+          Util.removeClass(modalEl, 'ru-video-hero-modal--is-loading');
+        });
+      }
     });
 
     document.addEventListener('keydown', function(e) {
@@ -276,7 +329,9 @@
         document.querySelectorAll('.ru-video-hero-js-modal.modal--is-visible').forEach(function(m) {
           Util.removeClass(m, 'modal--is-visible');
           var ifr = m.querySelector('.ru-video-hero-js-iframe');
+          var vid = m.querySelector('.ru-video-hero-js-video');
           if (ifr) ifr.setAttribute('src', '');
+          if (vid) { vid.pause(); vid.removeAttribute('src'); }
           Util.addClass(m, 'ru-video-hero-modal--is-loading');
           document.body.style.overflow = '';
         });
@@ -297,14 +352,32 @@
   "name": "RU | Video Hero",
   "settings": [
     {
+      "type": "select",
+      "id": "video_source",
+      "label": "Origen del vídeo",
+      "options": [
+        { "value": "youtube", "label": "YouTube" },
+        { "value": "shopify", "label": "Subir vídeo (Shopify)" }
+      ],
+      "default": "youtube"
+    },
+    {
       "type": "text",
       "id": "video_youtube_id",
-      "label": "Video (Youtube ID)"
+      "label": "YouTube - ID del vídeo",
+      "info": "Solo si has elegido YouTube. Ejemplo: dQw4w9WgXcQ"
+    },
+    {
+      "type": "video",
+      "id": "video_upload",
+      "label": "Shopify - Subir vídeo",
+      "info": "Solo si has elegido Subir vídeo. Formatos: MP4, WebM."
     },
     {
       "type": "image_picker",
       "id": "video_image",
-      "label": "Video image"
+      "label": "Imagen de portada (thumbnail)",
+      "info": "Para YouTube es obligatoria. Para vídeo subido se usa la miniatura del vídeo si no eliges imagen."
     },
     {
       "type": "header",
