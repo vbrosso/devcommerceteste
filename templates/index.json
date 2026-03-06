@@ -90,6 +90,18 @@
         "padding-block-end": 72
       }
     },
+    "notion_video_hero_kXVbzF": {
+      "type": "notion-video-hero",
+      "name": "RU | Video Hero",
+      "settings": {
+        "video_youtube_id": "XQJ282Hgijw",
+        "video_image": "shopify://shop_images/soap-image-4_59d8e9f7-6ec0-4ad5-ad55-c9facf2e3deb.png",
+        "padding_top_movil": 0,
+        "padding_bottom_movil": 0,
+        "padding_top_desktop": 0,
+        "padding_bottom_desktop": 0
+      }
+    },
     "custom_liquid_byAJT9": {
       "type": "custom-liquid",
       "name": "t:names.custom_liquid",
@@ -298,6 +310,7 @@
   },
   "order": [
     "hero_jVaWmY",
+    "notion_video_hero_kXVbzF",
     "custom_liquid_byAJT9",
     "product_list_fa6P9H"
   ]
