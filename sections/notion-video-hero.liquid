@@ -1,0 +1,362 @@
+{% style %}
+  /* Section padding */
+  .ru-video-hero-{{ section.id }} .ru-video-hero__padding {
+    padding-top: {{ section.settings.padding_top_movil }}px;
+    padding-bottom: {{ section.settings.padding_bottom_movil }}px;
+  }
+  @media (min-width: 641px) {
+    .ru-video-hero-{{ section.id }} .ru-video-hero__padding {
+      padding-top: {{ section.settings.padding_top_desktop }}px;
+      padding-bottom: {{ section.settings.padding_bottom_desktop }}px;
+    }
+  }
+
+  /* Modal */
+  .ru-video-hero-{{ section.id }} .ru-video-hero-modal {
+    position: fixed;
+    z-index: 9999;
+    width: 100%;
+    height: 100%;
+    left: 0;
+    top: 0;
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.2s, visibility 0s 0.2s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: rgba(0, 0, 0, 0.9);
+    padding: 1rem;
+    box-sizing: border-box;
+  }
+  .ru-video-hero-{{ section.id }} .ru-video-hero-modal:not(.modal--is-visible) {
+    pointer-events: none;
+  }
+  .ru-video-hero-{{ section.id }} .ru-video-hero-modal.modal--is-visible {
+    opacity: 1;
+    visibility: visible;
+  }
+  .ru-video-hero-{{ section.id }} .ru-video-hero-modal__content {
+    width: 100%;
+    max-width: 42rem;
+    max-height: 100%;
+    overflow: auto;
+    position: relative;
+  }
+  .ru-video-hero-{{ section.id }} .ru-video-hero-modal.modal--is-loading .ru-video-hero-modal__content {
+    visibility: hidden;
+  }
+  .ru-video-hero-{{ section.id }} .ru-video-hero-modal__loader {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    display: none;
+    justify-content: center;
+    align-items: center;
+    pointer-events: none;
+  }
+  .ru-video-hero-{{ section.id }} .ru-video-hero-modal.modal--is-loading .ru-video-hero-modal__loader {
+    display: flex;
+  }
+  .ru-video-hero-{{ section.id }} .ru-video-hero-modal__close {
+    position: fixed;
+    top: 1rem;
+    right: 1rem;
+    z-index: 10000;
+    width: 48px;
+    height: 48px;
+    padding: 0;
+    border: 0;
+    border-radius: 50%;
+    background: rgba(0, 0, 0, 0.9);
+    color: #fff;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .ru-video-hero-{{ section.id }} .ru-video-hero-modal__close svg {
+    width: 24px;
+    height: 24px;
+  }
+  .ru-video-hero-{{ section.id }} .ru-video-hero-media {
+    position: relative;
+    width: 100%;
+    padding-bottom: 56.25%;
+  }
+  .ru-video-hero-{{ section.id }} .ru-video-hero-media iframe {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    border: 0;
+  }
+
+  /* Video card */
+  .ru-video-hero-{{ section.id }} .ru-video-hero-card {
+    display: block;
+    color: inherit;
+    text-decoration: none;
+    position: relative;
+    cursor: pointer;
+  }
+  .ru-video-hero-{{ section.id }} .ru-video-hero-card:hover .ru-video-hero-preview {
+    filter: contrast(110%);
+  }
+  .ru-video-hero-{{ section.id }} .ru-video-hero-preview {
+    display: block;
+    width: 100%;
+    height: auto;
+    aspect-ratio: 16/9;
+    object-fit: cover;
+    vertical-align: middle;
+  }
+  .ru-video-hero-{{ section.id }} .ru-video-hero-play {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    top: 0;
+    left: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #fff;
+    pointer-events: none;
+  }
+  .ru-video-hero-{{ section.id }} .ru-video-hero-play::before {
+    content: "";
+    position: absolute;
+    width: 60px;
+    height: 60px;
+    top: calc(50% - 30px);
+    left: calc(50% - 30px);
+    background: rgba(255, 255, 255, 0.9);
+    border-radius: 50%;
+  }
+  .ru-video-hero-{{ section.id }} .ru-video-hero-play svg {
+    position: relative;
+    z-index: 1;
+    width: 24px;
+    height: 24px;
+  }
+{% endstyle %}
+
+<div class="ru-video-hero-{{ section.id }}" id="section-{{ section.id }}">
+  <div class="ru-video-hero__padding">
+    <a href="#0"
+       class="ru-video-hero-card ru-video-hero-js-trigger"
+       aria-controls="ru-video-hero-modal-{{ section.id }}"
+       data-url="https://www.youtube.com/embed/{{ section.settings.video_youtube_id }}?autoplay=1"
+       role="button">
+      <img class="ru-video-hero-preview"
+           src="{{ section.settings.video_image | img_url: '1200x' }}"
+           alt="{{ section.settings.video_image.alt | default: 'Video' }}"
+           width="1200"
+           height="675"
+           loading="lazy">
+      <span class="ru-video-hero-play" aria-hidden="true">
+        <svg viewBox="0 0 24 24" fill="currentColor">
+          <path d="M20.555 11.168l-15-10c-.307-.204-.702-.224-1.026-.05C4.203 1.292 4 1.631 4 2v20c0 .369.203.708.528.882.176.12.372.118.555.168l15-10c.278-.184.445-.496.445-.85s-.167-.666-.445-.85z"/>
+        </svg>
+      </span>
+    </a>
+  </div>
+
+  <div class="ru-video-hero-modal ru-video-hero-modal--is-loading ru-video-hero-js-modal"
+       id="ru-video-hero-modal-{{ section.id }}"
+       role="dialog"
+       aria-modal="true"
+       aria-labelledby="ru-video-hero-title-{{ section.id }}"
+       data-first-focus=".ru-video-hero-modal__close">
+    <div class="ru-video-hero-modal__content">
+      <div class="ru-video-hero-media">
+        <iframe class="ru-video-hero-js-iframe"
+                src=""
+                width="640"
+                height="360"
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                allowfullscreen
+                title="Video"></iframe>
+      </div>
+    </div>
+    <div class="ru-video-hero-modal__loader" aria-hidden="true">
+      <svg class="ru-video-hero-spinner" viewBox="0 0 48 48" width="48" height="48">
+        <circle cx="24" cy="24" r="20" fill="none" stroke="currentColor" stroke-width="4" opacity="0.4"/>
+        <path fill="currentColor" d="M48 24H44A20 20 0 0024 4V0A24 24 0 0148 24z"/>
+      </svg>
+    </div>
+    <button type="button"
+            class="ru-video-hero-modal__close ru-video-hero-js-close"
+            aria-label="Cerrar">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <line x1="3" y1="3" x2="21" y2="21"/>
+        <line x1="21" y1="3" x2="3" y2="21"/>
+      </svg>
+    </button>
+  </div>
+</div>
+
+<script>
+(function() {
+  if (window.RUVideoHeroInited) return;
+  window.RUVideoHeroInited = true;
+
+  var Util = {
+    hasClass: function(el, c) { return el && el.classList && el.classList.contains(c); },
+    addClass: function(el, c) { if (!el) return; (c || '').split(' ').forEach(function(x) { if (x) el.classList.add(x); }); },
+    removeClass: function(el, c) { if (!el) return; (c || '').split(' ').forEach(function(x) { if (x) el.classList.remove(x); }); }
+  };
+
+  var focusable = '[href], button:not([disabled]), [tabindex]:not([tabindex="-1"]), iframe';
+
+  function init() {
+    var modals = document.querySelectorAll('.ru-video-hero-js-modal');
+    modals.forEach(function(modalEl) {
+      var id = modalEl.id;
+      var trigger = document.querySelector('[aria-controls="' + id + '"]');
+      var iframe = modalEl.querySelector('.ru-video-hero-js-iframe');
+      var closeBtn = modalEl.querySelector('.ru-video-hero-js-close');
+      if (!iframe) return;
+
+      function show() {
+        Util.addClass(modalEl, 'modal--is-visible');
+        var url = trigger ? trigger.getAttribute('data-url') : '';
+        if (url) iframe.setAttribute('src', url);
+        document.body.style.overflow = 'hidden';
+        if (closeBtn) closeBtn.focus();
+      }
+
+      function hide() {
+        Util.addClass(modalEl, 'ru-video-hero-modal--is-loading');
+        Util.removeClass(modalEl, 'modal--is-visible');
+        iframe.setAttribute('src', '');
+        document.body.style.overflow = '';
+        if (trigger) trigger.focus();
+      }
+
+      if (trigger) {
+        trigger.addEventListener('click', function(e) {
+          e.preventDefault();
+          if (Util.hasClass(modalEl, 'modal--is-visible')) { hide(); return; }
+          show();
+        });
+      }
+
+      if (closeBtn) closeBtn.addEventListener('click', hide);
+
+      modalEl.addEventListener('click', function(e) {
+        if (e.target === modalEl) hide();
+      });
+
+      modalEl.addEventListener('keydown', function(e) {
+        if (e.key === 'Escape') { hide(); return; }
+        if (e.key !== 'Tab') return;
+        var focusableEls = modalEl.querySelectorAll(focusable);
+        var first = focusableEls[0];
+        var last = focusableEls[focusableEls.length - 1];
+        if (e.shiftKey && document.activeElement === first) {
+          e.preventDefault();
+          last && last.focus();
+        } else if (!e.shiftKey && document.activeElement === last) {
+          e.preventDefault();
+          first && first.focus();
+        }
+      });
+
+      iframe.addEventListener('load', function() {
+        Util.removeClass(modalEl, 'ru-video-hero-modal--is-loading');
+      });
+    });
+
+    document.addEventListener('keydown', function(e) {
+      if (e.key === 'Escape') {
+        document.querySelectorAll('.ru-video-hero-js-modal.modal--is-visible').forEach(function(m) {
+          Util.removeClass(m, 'modal--is-visible');
+          var ifr = m.querySelector('.ru-video-hero-js-iframe');
+          if (ifr) ifr.setAttribute('src', '');
+          Util.addClass(m, 'ru-video-hero-modal--is-loading');
+          document.body.style.overflow = '';
+        });
+      }
+    });
+  }
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', init);
+  } else {
+    init();
+  }
+})();
+</script>
+
+{% schema %}
+{
+  "name": "RU | Video Hero",
+  "settings": [
+    {
+      "type": "text",
+      "id": "video_youtube_id",
+      "label": "Video (Youtube ID)"
+    },
+    {
+      "type": "image_picker",
+      "id": "video_image",
+      "label": "Video image"
+    },
+    {
+      "type": "header",
+      "content": "Spacing"
+    },
+    {
+      "type": "range",
+      "id": "padding_top_movil",
+      "min": 0,
+      "max": 200,
+      "step": 4,
+      "unit": "px",
+      "label": "Padding Top (mobile)",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom_movil",
+      "min": 0,
+      "max": 200,
+      "step": 4,
+      "unit": "px",
+      "label": "Padding Bottom (mobile)",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "padding_top_desktop",
+      "min": 0,
+      "max": 320,
+      "step": 4,
+      "unit": "px",
+      "label": "Padding Top (desktop)",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom_desktop",
+      "min": 0,
+      "max": 320,
+      "step": 4,
+      "unit": "px",
+      "label": "Padding Bottom (desktop)",
+      "default": 0
+    }
+  ],
+  "presets": [
+    {
+      "category": "Advanced",
+      "name": "RU | Video Hero",
+      "settings": {}
+    }
+  ]
+}
+{% endschema %}
